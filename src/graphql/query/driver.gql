@@ -1,0 +1,20 @@
+query Drivers{
+  driver{
+    allDrivers{
+      id
+      name
+      phone
+    }
+  }
+}
+
+query MyQuery($id: Int!) {
+  driver {
+    driver(id: $id) {
+      id
+      name
+      phone
+    }
+  }
+}
+

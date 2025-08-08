@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "billing-w07d.onrender.com",
+        port: "",
+        pathname: "/media/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

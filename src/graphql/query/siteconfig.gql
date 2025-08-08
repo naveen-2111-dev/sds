@@ -1,0 +1,12 @@
+query SiteConfig{
+  core{
+    siteConfig{
+      id
+      address
+      phone1
+      phone2
+      siteName
+      siteLogo
+    }
+  }
+}
