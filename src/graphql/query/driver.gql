@@ -1,0 +1,27 @@
+query GetAllDrivers{
+  driver{
+    allDrivers{
+      id
+      name
+      phone
+    }
+  }
+}
+
+query GetDriver($id: Int!) {
+  driver {
+    driver(id: $id) {
+      id
+      name
+      phone
+    }
+  }
+}
+
+mutation CreateNewDriver($input: CreateDriverInput!){
+  createDriver(input:$input){
+    driver{
+      id
+    }
+  }
+}

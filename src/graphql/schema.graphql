@@ -1,0 +1,419 @@
+type Query {
+  core: CoreQuery
+  driver: DriverQuery
+  vehicle: VehicleQuery
+  party: PartyQuery
+}
+
+type CoreQuery {
+  siteConfig: SiteConfigurationType
+  me: UserType
+}
+
+type SiteConfigurationType {
+  id: ID!
+
+  """The name of the website displayed to users"""
+  siteName: String!
+
+  """Address of the organization"""
+  address: String!
+
+  """Primary contact number"""
+  phone1: String!
+
+  """Secondary contact number"""
+  phone2: String!
+
+  """Site logo image (recommended size: 200x60px)"""
+  siteLogo: String
+}
+
+type UserType {
+  id: ID!
+
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+}
+
+type DriverQuery {
+  allDrivers: [DriverType]
+  driver(id: Int!): DriverType
+}
+
+type DriverType {
+  id: ID!
+  name: String!
+  phone: String
+}
+
+type VehicleQuery {
+  allVehicleBrands: [VehicleBrandType]
+  vehicleBrand(id: Int!): VehicleBrandType
+  allVehicles: [VehicleType]
+  vehicle(id: Int!): VehicleType
+  vehiclesByBrand(brandId: Int!): [VehicleType]
+  allExpenseCategories: [ExpenseCategoryType]
+  expenseCategory(id: Int!): ExpenseCategoryType
+  allVehicleExpenses: [VehicleExpenseType]
+  vehicleExpense(id: Int!): VehicleExpenseType
+  expenses(offset: Int, before: String, after: String, first: Int, last: Int, vehicleId: ID, categoryId: ID, startDate: Date, endDate: Date): VehicleExpenseTypeConnection
+}
+
+type VehicleBrandType {
+  id: ID!
+  name: String!
+  logo: String
+  vehicles: [VehicleType!]!
+}
+
+type VehicleType {
+  id: ID!
+  brand: VehicleBrandType!
+  name: String!
+  year: Int!
+
+  """Unique registration number (e.g., TN 01 AT 1234)"""
+  registrationNumber: String!
+  expenses(offset: Int, before: String, after: String, first: Int, last: Int, vehicleId: ID, categoryId: ID): VehicleExpenseTypeConnection!
+}
+
+type VehicleExpenseTypeConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [VehicleExpenseTypeEdge]!
+}
+
+"""
+The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+"""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""A Relay edge containing a `VehicleExpenseType` and its cursor."""
+type VehicleExpenseTypeEdge {
+  """The item at the end of the edge"""
+  node: VehicleExpenseType
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type VehicleExpenseType implements Node {
+  """The ID of the object"""
+  id: ID!
+  vehicle: VehicleType!
+  category: ExpenseCategoryType
+
+  """Optional description of the expense"""
+  description: String!
+  amount: Decimal!
+  date: Date!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""An object with an ID"""
+interface Node {
+  """The ID of the object"""
+  id: ID!
+}
+
+type ExpenseCategoryType {
+  id: ID!
+  name: String!
+  emoji: String!
+  expenses(offset: Int, before: String, after: String, first: Int, last: Int, vehicleId: ID, categoryId: ID): VehicleExpenseTypeConnection!
+}
+
+"""The `Decimal` scalar type represents a python Decimal."""
+scalar Decimal
+
+"""
+The `Date` scalar type represents a Date
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Date
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type PartyQuery {
+  parties(offset: Int, before: String, after: String, first: Int, last: Int, name: String, name_Icontains: String, name_Istartswith: String, phone: String, phone_Icontains: String, phone_Istartswith: String, gstNumber: String, gstNumber_Icontains: String, gstNumber_Istartswith: String, createdAt: DateTime, createdAt_Range: [DateTime]): PartyTypeConnection
+  party(id: ID!): PartyType
+}
+
+type PartyTypeConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [PartyTypeEdge]!
+}
+
+"""A Relay edge containing a `PartyType` and its cursor."""
+type PartyTypeEdge {
+  """The item at the end of the edge"""
+  node: PartyType
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type PartyType implements Node {
+  """The ID of the object"""
+  id: ID!
+  name: String!
+  phone: String!
+  gstNumber: String
+  createdAt: DateTime!
+}
+
+type Mutation {
+  updateSiteConfiguration(address: String, phone1: String, phone2: String, siteLogo: Upload, siteName: String): UpdateSiteConfiguration
+
+  """Obtain JSON Web Token mutation"""
+  tokenAuth(username: String!, password: String!): ObtainJSONWebToken
+  verifyToken(token: String): Verify
+  refreshToken(token: String): Refresh
+  createDriver(input: CreateDriverInput!): CreateDriverMutation
+  updateDriver(id: ID!, input: UpdateDriverInput!): UpdateDriverMutation
+  deleteDriver(id: ID!): DeleteDriverMutation
+  createVehicleBrand(input: CreateVehicleBrandInput!): CreateVehicleBrandMutation
+  updateVehicleBrand(id: ID!, input: UpdateVehicleBrandInput!): UpdateVehicleBrandMutation
+  deleteVehicleBrand(id: ID!): DeleteVehicleBrandMutation
+  createVehicle(input: CreateVehicleInput!): CreateVehicleMutation
+  updateVehicle(id: ID!, input: UpdateVehicleInput!): UpdateVehicleMutation
+  deleteVehicle(id: ID!): DeleteVehicleMutation
+  createExpenseCategory(input: CreateExpenseCategoryInput!): CreateExpenseCategoryMutation
+  updateExpenseCategory(id: ID!, input: UpdateExpenseCategoryInput!): UpdateExpenseCategoryMutation
+  deleteExpenseCategory(id: ID!): DeleteExpenseCategoryMutation
+  createVehicleExpense(input: CreateVehicleExpenseInput!): CreateVehicleExpenseMutation
+  updateVehicleExpense(id: ID!, input: UpdateVehicleExpenseInput!): UpdateVehicleExpenseMutation
+  deleteVehicleExpense(id: ID!): DeleteVehicleExpenseMutation
+  createParty(input: CreatePartyInput!): CreateParty
+  updateParty(id: ID!, input: UpdatePartyInput!): UpdateParty
+  deleteParty(id: ID!): DeleteParty
+}
+
+type UpdateSiteConfiguration {
+  siteConfig: SiteConfigurationType
+}
+
+"""
+Create scalar that ignores normal serialization/deserialization, since
+that will be handled by the multipart request spec
+"""
+scalar Upload
+
+"""Obtain JSON Web Token mutation"""
+type ObtainJSONWebToken {
+  payload: GenericScalar!
+  refreshExpiresIn: Int!
+  token: String!
+}
+
+"""
+The `GenericScalar` scalar type represents a generic
+GraphQL scalar value that could be:
+String, Boolean, Int, Float, List or Object.
+"""
+scalar GenericScalar
+
+type Verify {
+  payload: GenericScalar!
+}
+
+type Refresh {
+  payload: GenericScalar!
+  refreshExpiresIn: Int!
+  token: String!
+}
+
+type CreateDriverMutation {
+  driver: DriverType
+}
+
+input CreateDriverInput {
+  name: String!
+  phone: String
+}
+
+type UpdateDriverMutation {
+  driver: DriverType
+}
+
+input UpdateDriverInput {
+  name: String
+  phone: String
+}
+
+type DeleteDriverMutation {
+  found: Boolean
+  deletedInputId: ID
+  deletedId: ID
+  deletedRawId: ID
+}
+
+type CreateVehicleBrandMutation {
+  vehicleBrand: VehicleBrandType
+}
+
+input CreateVehicleBrandInput {
+  name: String!
+  logo: Upload
+}
+
+type UpdateVehicleBrandMutation {
+  vehicleBrand: VehicleBrandType
+}
+
+input UpdateVehicleBrandInput {
+  name: String
+  logo: Upload
+}
+
+type DeleteVehicleBrandMutation {
+  found: Boolean
+  deletedInputId: ID
+  deletedId: ID
+  deletedRawId: ID
+}
+
+type CreateVehicleMutation {
+  vehicle: VehicleType
+}
+
+input CreateVehicleInput {
+  brand: ID!
+  name: String!
+  year: Int!
+  registrationNumber: String!
+}
+
+type UpdateVehicleMutation {
+  vehicle: VehicleType
+}
+
+input UpdateVehicleInput {
+  brand: ID
+  name: String
+  year: Int
+  registrationNumber: String
+}
+
+type DeleteVehicleMutation {
+  found: Boolean
+  deletedInputId: ID
+  deletedId: ID
+  deletedRawId: ID
+}
+
+type CreateExpenseCategoryMutation {
+  expenseCategory: ExpenseCategoryType
+}
+
+input CreateExpenseCategoryInput {
+  name: String!
+}
+
+type UpdateExpenseCategoryMutation {
+  expenseCategory: ExpenseCategoryType
+}
+
+input UpdateExpenseCategoryInput {
+  name: String
+}
+
+type DeleteExpenseCategoryMutation {
+  found: Boolean
+  deletedInputId: ID
+  deletedId: ID
+  deletedRawId: ID
+}
+
+type CreateVehicleExpenseMutation {
+  vehicleExpense: VehicleExpenseType
+}
+
+input CreateVehicleExpenseInput {
+  vehicle: ID!
+  category: ID
+  description: String
+  amount: Decimal!
+  date: Date
+}
+
+type UpdateVehicleExpenseMutation {
+  vehicleExpense: VehicleExpenseType
+}
+
+input UpdateVehicleExpenseInput {
+  vehicle: ID
+  category: ID
+  description: String
+  amount: Decimal
+  date: Date
+}
+
+type DeleteVehicleExpenseMutation {
+  found: Boolean
+  deletedInputId: ID
+  deletedId: ID
+  deletedRawId: ID
+}
+
+type CreateParty {
+  party: PartyType
+}
+
+input CreatePartyInput {
+  """"""
+  name: String!
+
+  """"""
+  phone: String!
+
+  """"""
+  gstNumber: String
+}
+
+type UpdateParty {
+  party: PartyType
+}
+
+input UpdatePartyInput {
+  """"""
+  name: String!
+
+  """"""
+  phone: String!
+
+  """"""
+  gstNumber: String
+}
+
+type DeleteParty {
+  found: Boolean
+  deletedInputId: ID
+  deletedId: ID
+  deletedRawId: ID
+}
