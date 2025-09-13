@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { DialogTrigger } from '@radix-ui/react-dialog'
 import { Plus } from 'lucide-react'
 import AddDriverForm from './AddDriverForm'
-import { CreateDriverDocument, CreateDriverInput, DriversDocument } from '@/graphql/generated/graphql'
+import { CreateDriverInput, CreateNewDriverDocument, GetAllDriversDocument } from '@/graphql/generated/graphql'
 import { useMutation } from '@apollo/client';
 import { toast } from 'sonner';
 
@@ -23,7 +23,7 @@ const AddDriverDialog = () => {
         name: "",
         phone: ""
     });
-    const [createDriver] = useMutation(CreateDriverDocument);
+    const [createDriver] = useMutation(CreateNewDriverDocument);
 
     const handleAddDriver = () => {
         createDriver({
@@ -32,7 +32,7 @@ const AddDriverDialog = () => {
                     ...State
                 }
             },
-            refetchQueries: [DriversDocument],
+            refetchQueries: [GetAllDriversDocument],
             onCompleted: () => {
                 toast.success("Driver Added Successfully")
             },

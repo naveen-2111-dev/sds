@@ -1,6 +1,6 @@
 "use client";
 
-import { DriversDocument } from "@/graphql/generated/graphql";
+import { GetAllDriversDocument } from "@/graphql/generated/graphql";
 import { useQuery } from "@apollo/client";
 import React from "react";
 import {
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";
 
 const Page = () => {
-    const { data, loading } = useQuery(DriversDocument);
+    const { data, loading } = useQuery(GetAllDriversDocument);
 
     if (loading) {
         return (

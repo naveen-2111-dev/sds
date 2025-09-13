@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react'
 import { SidebarCustom } from '@/components';
-import { Providers } from '@/providers/AppProvider';
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 import "./_global.css";
@@ -10,10 +9,8 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
         <SidebarProvider>
             <SidebarCustom />
             <main>
-                <Providers>
-                    <SidebarTrigger />
-                    {children}
-                </Providers>
+                <SidebarTrigger />
+                {children}
             </main>
         </SidebarProvider>
     )
