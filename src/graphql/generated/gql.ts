@@ -16,10 +16,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 type Documents = {
     "query GetAllDrivers {\n  driver {\n    allDrivers {\n      id\n      name\n      phone\n    }\n  }\n}\n\nquery GetDriver($id: Int!) {\n  driver {\n    driver(id: $id) {\n      id\n      name\n      phone\n    }\n  }\n}\n\nmutation CreateNewDriver($input: CreateDriverInput!) {\n  createDriver(input: $input) {\n    driver {\n      id\n    }\n  }\n}": typeof types.GetAllDriversDocument,
     "query SiteConfig {\n  core {\n    siteConfig {\n      id\n      address\n      phone1\n      phone2\n      siteName\n      siteLogo\n    }\n  }\n}": typeof types.SiteConfigDocument,
+    "mutation Login($username: String!, $password: String!) {\n  tokenAuth(username: $username, password: $password) {\n    token\n    refreshExpiresIn\n  }\n}": typeof types.LoginDocument,
 };
 const documents: Documents = {
     "query GetAllDrivers {\n  driver {\n    allDrivers {\n      id\n      name\n      phone\n    }\n  }\n}\n\nquery GetDriver($id: Int!) {\n  driver {\n    driver(id: $id) {\n      id\n      name\n      phone\n    }\n  }\n}\n\nmutation CreateNewDriver($input: CreateDriverInput!) {\n  createDriver(input: $input) {\n    driver {\n      id\n    }\n  }\n}": types.GetAllDriversDocument,
     "query SiteConfig {\n  core {\n    siteConfig {\n      id\n      address\n      phone1\n      phone2\n      siteName\n      siteLogo\n    }\n  }\n}": types.SiteConfigDocument,
+    "mutation Login($username: String!, $password: String!) {\n  tokenAuth(username: $username, password: $password) {\n    token\n    refreshExpiresIn\n  }\n}": types.LoginDocument,
 };
 
 /**
@@ -44,6 +46,10 @@ export function graphql(source: "query GetAllDrivers {\n  driver {\n    allDrive
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query SiteConfig {\n  core {\n    siteConfig {\n      id\n      address\n      phone1\n      phone2\n      siteName\n      siteLogo\n    }\n  }\n}"): (typeof documents)["query SiteConfig {\n  core {\n    siteConfig {\n      id\n      address\n      phone1\n      phone2\n      siteName\n      siteLogo\n    }\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation Login($username: String!, $password: String!) {\n  tokenAuth(username: $username, password: $password) {\n    token\n    refreshExpiresIn\n  }\n}"): (typeof documents)["mutation Login($username: String!, $password: String!) {\n  tokenAuth(username: $username, password: $password) {\n    token\n    refreshExpiresIn\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
